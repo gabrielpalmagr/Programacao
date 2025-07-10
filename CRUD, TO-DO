@@ -1,27 +1,27 @@
+
 #include <stdio.h>
-
-#define MAX 100                  
-
+#define MAX 100               
 /*--------------------------------------------------------------------*/
+
 struct Task {
-    int  id;                    
-    char desc[100];           
-    int  done;                  
+    int  id;                     /* identificador único */
+    char desc[100];              /* descrição */
+    int  done;                   /* 0 = pendente | 1 = concluída */
 };
 
-
+static struct Task tasks[MAX];
+static int qtd = 0;          
 /*--------------------------------------------------------------------*/
 int buscarPorId(int id)
 {
     int i;
     for (i = 0; i < qtd; i++) {
         if (tasks[i].id == id) {
-            return i;            
+            return i;       
         }
     }
-    return -1;                   
+    return -1;                  
 }
-
 /*--------------------------------------------------------------------*/
 void cadastrar(void)
 {
@@ -29,40 +29,30 @@ void cadastrar(void)
         printf("\nLimite de tarefas atingido (%d).\n", MAX);
         return;
     }
-
     printf("\n--- NOVA TAREFA ---\n");
-
     printf("Id: ");
     scanf("%d", &tasks[qtd].id);
-    while (getchar() != '\n');      
-
+    while (getchar() != '\n');      /* limpa buffer */
     if (buscarPorId(tasks[qtd].id) != -1) {
         printf("Id já existente.\n");
         return;
     }
-
     printf("Descrição: ");
     scanf(" %99[^\n]", tasks[qtd].desc);
-
-    tasks[qtd].done = 0;         
+    tasks[qtd].done = 0;          
     qtd++;
-
     printf("Tarefa cadastrada com sucesso!\n");
 }
-
 /*--------------------------------------------------------------------*/
 void listar(void)
 {
     printf("\n--- LISTA DE TAREFAS (%d) ---\n", qtd);
-
     if (qtd == 0) {
         printf("Nenhuma tarefa cadastrada.\n");
         return;
     }
-
     printf("ID   %-60s STATUS\n", "DESCRIÇÃO");
     printf("--------------------------------------------------------------\n");
-
     int i;
     for (i = 0; i < qtd; i++) {
         printf("%-4d %-60s %s\n",
@@ -71,38 +61,32 @@ void listar(void)
                tasks[i].done ? "Concluída" : "Pendente");
     }
 }
-
 /*--------------------------------------------------------------------*/
 void editar(void)
 {
     int id;
     printf("\n--- EDITAR TAREFA ---\nId: ");
     scanf("%d", &id);
-
     int idx = buscarPorId(id);
     if (idx == -1) {
         printf("Tarefa não encontrada.\n");
         return;
     }
-
     printf("Descrição atual: %s\n", tasks[idx].desc);
     printf("Status atual   : %s\n",
            tasks[idx].done ? "Concluída" : "Pendente");
-    while (getchar() != '\n');        
-
+    while (getchar() != '\n');       
     /* --------------------
      * Alteração da descrição
      * -------------------- */
     char respDesc;
     printf("Alterar descrição? (s/n): ");
     scanf(" %c", &respDesc);
-
     if (respDesc == 's' || respDesc == 'S') {
-        while (getchar() != '\n');      
+        while (getchar() != '\n');     
         printf("Nova descrição: ");
         scanf(" %99[^\n]", tasks[idx].desc);
     }
-
     /* --------------------
      * Alteração do status
      * -------------------- */
@@ -110,48 +94,38 @@ void editar(void)
     printf("Marcar como concluída? (s/n): ");
     scanf(" %c", &respStatus);
     tasks[idx].done = (respStatus == 's' || respStatus == 'S');
-
     printf("Tarefa atualizada.\n");
 }
-
 /*--------------------------------------------------------------------*/
 void excluir(void)
 {
     int id;
     printf("\n--- EXCLUIR TAREFA ---\nId: ");
     scanf("%d", &id);
-
     int idx = buscarPorId(id);
     if (idx == -1) {
         printf("Tarefa não encontrada.\n");
         return;
     }
-
     printf("Descrição: %s\n", tasks[idx].desc);
     printf("Confirmar exclusão? (s/n): ");
     char conf;
     scanf(" %c", &conf);
-
     if (!(conf == 's' || conf == 'S')) {
         printf("Operação cancelada.\n");
         return;
     }
-
     int i;
     for (i = idx; i < qtd - 1; i++)
         tasks[i] = tasks[i + 1];
     qtd--;
-
     printf("Tarefa excluída!\n");
 }
-
 /*--------------------------------------------------------------------*/
 int main(void)
 {
     int op;
-
     printf("\nSISTEMA DE TAREFAS — CRUD BÁSICO\n");
-
     do {
         printf("\n1. Cadastrar tarefa\n");
         printf("2. Listar tarefas\n");
@@ -161,7 +135,6 @@ int main(void)
         printf("Opção: ");
         scanf("%d", &op);
         while (getchar() != '\n');
-
         switch (op) {
             case 1: cadastrar(); break;
             case 2: listar();    break;
@@ -170,8 +143,7 @@ int main(void)
             case 0: printf("Encerrando sistema...\n"); break;
             default: printf("Opção inválida!\n");
         }
-
     } while (op != 0);
-
     return 0;
-}
+}                             
+
