@@ -4,9 +4,9 @@
 /*--------------------------------------------------------------------*/
 
 struct Task {
-    int  id;                     /* identificador único */
-    char desc[100];              /* descrição */
-    int  done;                   /* 0 = pendente | 1 = concluída */
+    int  id;                   
+    char desc[100];             
+    int  done;                  
 };
 
 static struct Task tasks[MAX];
@@ -32,7 +32,7 @@ void cadastrar(void)
     printf("\n--- NOVA TAREFA ---\n");
     printf("Id: ");
     scanf("%d", &tasks[qtd].id);
-    while (getchar() != '\n');      /* limpa buffer */
+    while (getchar() != '\n');     
     if (buscarPorId(tasks[qtd].id) != -1) {
         printf("Id já existente.\n");
         return;
